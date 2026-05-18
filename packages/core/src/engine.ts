@@ -6,12 +6,12 @@ export interface MediaEngineOptions {
   startTime?: number;
 }
 
-export interface MediaEngineEvents {
+export type MediaEngineEvents = {
   ready: () => void;
   error: (err: { code: number; message: string }) => void;
   durationchange: (duration: number) => void;
   progress: (buffered: ReadonlyArray<[number, number]>) => void;
-}
+};
 
 export interface MediaEngine {
   readonly name: string;

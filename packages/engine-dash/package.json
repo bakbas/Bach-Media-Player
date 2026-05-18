@@ -1,0 +1,47 @@
+{
+  "name": "@bach/engine-dash",
+  "version": "0.0.0",
+  "description": "Bach Media Player DASH engine adapter (Shaka Player).",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:browser": "vitest run --browser",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*",
+    "shaka-player": "^4.10.0"
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/engine-dash (ESM, gzipped, shaka external)",
+      "path": "dist/index.js",
+      "ignore": ["shaka-player"],
+      "limit": "8 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

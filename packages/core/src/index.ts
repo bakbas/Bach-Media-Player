@@ -1,6 +1,7 @@
 export { BachPlayerElement } from './element.js';
 export { bindVideoToState } from './video-binding.js';
 export { createPlayerState, type PlayerState, type PlayerStateSnapshot } from './state.js';
+export { createEventBus, type EventBus } from './event-bus.js';
 export {
   CSS_VARIABLE_TOKENS,
   PART_NAMES,

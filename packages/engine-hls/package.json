@@ -1,0 +1,48 @@
+{
+  "name": "@bach/engine-hls",
+  "version": "0.0.0",
+  "description": "Bach Media Player HLS engine adapter (hls.js).",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:browser": "vitest run --browser",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*",
+    "hls.js": "^1.5.0"
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*",
+    "hls.js": "^1.5.20"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/engine-hls (ESM, gzipped, hls.js external)",
+      "path": "dist/index.js",
+      "ignore": ["hls.js"],
+      "limit": "8 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
