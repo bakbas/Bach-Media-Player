@@ -1,9 +1,16 @@
+import { installKeyboardShortcuts } from '@bach/a11y';
+import type {
+  BachCaptionsConsentElement,
+  BachCaptionsElement,
+  CaptionsConsentResolveEvent,
+  Segment,
+} from '@bach/captions-ai';
+import '@bach/captions-ai/define';
 import type { BachPlayerElement, applyTheme } from '@bach/core';
 import '@bach/core/define';
-import '@bach/ui/define';
-import { installKeyboardShortcuts } from '@bach/a11y';
 import { createHlsEngine } from '@bach/engine-hls';
 import { createNativeEngine } from '@bach/engine-native';
+import '@bach/ui/define';
 import Hls from 'hls.js';
 import { PRESETS } from './themes.js';
 
@@ -98,6 +105,69 @@ headlessToggle.addEventListener('change', () => {
   if (headlessToggle.checked) player.setAttribute('headless', '');
   else player.removeAttribute('headless');
 });
+
+// ----- AI captions demo ---------------------------------------------------
+
+const captionsEl = player.querySelector('bach-captions') as BachCaptionsElement;
+const consentEl = player.querySelector('bach-captions-consent') as BachCaptionsConsentElement;
+const captionsOutput = document.getElementById('captions-output') as HTMLPreElement;
+
+/**
+ * Deterministic demo transcript. The real production binding lives in
+ * `@bach/captions-ai/whisper` and consumes audio chunks from
+ * `createTranscriptionController`. Wired here so E2E reviewers can verify the
+ * caption rendering, the dedupe behaviour, and (most importantly) that no
+ * audio bytes go out — the demo loop never touches the network.
+ */
+const DEMO_SCRIPT: Segment[] = [
+  { start: 0, end: 2, text: 'Welcome to Bach Media Player.' },
+  { start: 2.1, end: 4, text: 'Captions are generated entirely in your browser.' },
+  { start: 4.1, end: 6, text: 'Your audio never leaves the device.' },
+  { start: 6.1, end: 8, text: 'Disable the dialog at any time.' },
+];
+
+function renderTranscript(): void {
+  const lines = captionsEl.segments.map(
+    (s) => `${s.start.toFixed(2)}–${s.end.toFixed(2)}  ${s.text}`,
+  );
+  captionsOutput.textContent = lines.length === 0 ? '[no segments yet]' : lines.join('\n');
+}
+
+document.getElementById('captions-prompt')?.addEventListener('click', async () => {
+  // Reset previous decision so the demo prompt is reachable every click.
+  try {
+    localStorage.removeItem('bach:captions-ai:permission');
+  } catch {
+    /* ignored */
+  }
+  await consentEl.resolve();
+});
+
+consentEl.addEventListener('bach:captions-consent', (event) => {
+  const { decision } = (event as CustomEvent<CaptionsConsentResolveEvent>).detail;
+  captionsOutput.textContent = `[consent] ${decision}`;
+  if (decision === 'granted') {
+    consentEl.setProgress(0.4);
+    setTimeout(() => {
+      consentEl.setProgress(1);
+      consentEl.setReady();
+      captionsEl.setSegments(DEMO_SCRIPT);
+      renderTranscript();
+    }, 350);
+  }
+});
+
+document.getElementById('captions-feed')?.addEventListener('click', () => {
+  captionsEl.setSegments(DEMO_SCRIPT);
+  renderTranscript();
+});
+
+document.getElementById('captions-reset')?.addEventListener('click', () => {
+  captionsEl.reset();
+  renderTranscript();
+});
+
+renderTranscript();
 
 // ----- Live state read-out ------------------------------------------------
 

@@ -59,6 +59,9 @@ importers:
       '@bach/a11y':
         specifier: workspace:*
         version: link:../../packages/a11y
+      '@bach/captions-ai':
+        specifier: workspace:*
+        version: link:../../packages/captions-ai
       '@bach/core':
         specifier: workspace:*
         version: link:../../packages/core
