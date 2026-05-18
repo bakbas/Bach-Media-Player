@@ -9,13 +9,15 @@
   <body>
     <header>
       <h1>Bach Media Player</h1>
-      <p class="tagline">Composable, themable, AI-native web media player — Phase 1 alpha.</p>
+      <p class="tagline">Composable, themable, AI-native web media player — Phase 2 alpha.</p>
     </header>
 
     <main>
       <section class="stage" data-testid="stage">
         <bach-player id="player" src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" muted>
           <video slot="media" crossorigin playsinline></video>
+          <bach-captions language="en" label="AI captions"></bach-captions>
+          <bach-captions-consent model="tiny" data-testid="captions-consent"></bach-captions-consent>
           <bach-controls slot="controls">
             <bach-play-button></bach-play-button>
             <bach-progress></bach-progress>
@@ -24,6 +26,22 @@
             <bach-fullscreen-button></bach-fullscreen-button>
           </bach-controls>
         </bach-player>
+      </section>
+
+      <section class="panel">
+        <h2>AI captions (Notasyon)</h2>
+        <p class="muted">
+          The consent dialog shows on first use. After approval, audio is transcribed in-browser —
+          no bytes leave the device. This demo uses a deterministic fake engine so reviewers do not
+          have to download the 39 MB Whisper model; the production binding lives in
+          <code>@bach/captions-ai/whisper</code>.
+        </p>
+        <div class="actions">
+          <button id="captions-prompt" data-testid="captions-prompt">Enable captions</button>
+          <button id="captions-feed" data-testid="captions-feed">Feed demo transcript</button>
+          <button id="captions-reset" data-testid="captions-reset">Reset</button>
+        </div>
+        <pre id="captions-output" data-testid="captions-output" aria-live="polite"></pre>
       </section>
 
       <section class="panel">
