@@ -1,0 +1,46 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "ui": "tui",
+  "globalDependencies": ["tsconfig.base.json", "biome.json", ".changeset/config.json"],
+  "globalEnv": ["CI", "NODE_ENV"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsconfig.json", "tsup.config.*"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "vitest.config.*", "package.json"],
+      "outputs": []
+    },
+    "test:browser": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "vitest.config.*", "package.json"],
+      "outputs": []
+    },
+    "coverage": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "vitest.config.*"],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json", "tsconfig.base.json"],
+      "outputs": ["*.tsbuildinfo"]
+    },
+    "size": {
+      "dependsOn": ["build"],
+      "inputs": ["dist/**", ".size-limit.cjs", ".size-limit.json", "package.json"],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false,
+      "outputs": []
+    }
+  }
+}

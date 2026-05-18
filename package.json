@@ -1,0 +1,48 @@
+{
+  "name": "bach-media-player",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bach Media Player — composable, themable, AI-native web media player. Monorepo root.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "test:browser": "turbo run test:browser",
+    "test:e2e": "playwright test",
+    "coverage": "turbo run coverage",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "turbo run typecheck",
+    "size": "turbo run size",
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish",
+    "prepare": "lefthook install || true"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.27.9",
+    "@playwright/test": "^1.48.2",
+    "@size-limit/preset-small-lib": "^11.1.6",
+    "@types/node": "^22.9.0",
+    "@vitest/browser": "^2.1.5",
+    "@vitest/coverage-v8": "^2.1.5",
+    "happy-dom": "^15.11.6",
+    "lefthook": "^1.8.4",
+    "playwright": "^1.48.2",
+    "size-limit": "^11.1.6",
+    "tsup": "^8.3.5",
+    "turbo": "^2.3.0",
+    "typescript": "5.6.3",
+    "vitest": "^2.1.5"
+  }
+}
