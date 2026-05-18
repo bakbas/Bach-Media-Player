@@ -1,5 +1,9 @@
 export { BachCaptionsElement } from './element.js';
 export {
+  BachCaptionsConsentElement,
+  type CaptionsConsentResolveEvent,
+} from './consent-element.js';
+export {
   type AudioChunk,
   type AudioChunkerOptions,
   WHISPER_SAMPLE_RATE,
