@@ -1,7 +1,11 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: { index: 'src/index.ts', define: 'src/define.ts' },
+  entry: {
+    index: 'src/index.ts',
+    define: 'src/define.ts',
+    whisper: 'src/whisper-engine.ts',
+  },
   format: ['esm', 'cjs'],
   dts: true,
   sourcemap: true,
