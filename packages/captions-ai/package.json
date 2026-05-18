@@ -1,0 +1,60 @@
+{
+  "name": "@bach/captions-ai",
+  "version": "0.0.0",
+  "description": "Bach Media Player AI captions engine — in-browser Whisper via Transformers.js, no audio leaves the device.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["./src/define.ts", "./dist/define.js", "./dist/define.cjs"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "import": "./dist/define.js",
+      "require": "./dist/define.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:browser": "vitest run --browser",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*",
+    "@huggingface/transformers": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@huggingface/transformers": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@preact/signals-core": "^1.8.0"
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/captions-ai (ESM, gzipped, transformers external)",
+      "path": "dist/index.js",
+      "ignore": ["@huggingface/transformers"],
+      "limit": "8 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
