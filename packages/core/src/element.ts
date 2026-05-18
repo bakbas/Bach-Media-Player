@@ -1,11 +1,21 @@
 import { type PlayerState, createPlayerState } from './state.js';
+import { bindVideoToState } from './video-binding.js';
 
 const OBSERVED_ATTRIBUTES = ['src', 'autoplay', 'muted', 'headless', 'theme'] as const;
 
+/**
+ * `<bach-player>` Custom Element. Slot-based composition (Media Chrome
+ * pattern): callers provide a `<video slot="media">` and any chrome they
+ * want via additional slots. The element only wires the video element to
+ * the signals state and exposes the imperative API — engines plug in via
+ * the public state contract (Phase 1, Sprint 3).
+ */
 export class BachPlayerElement extends HTMLElement {
   readonly state: PlayerState;
   #shadow: ShadowRoot;
   #video: HTMLVideoElement | null = null;
+  #unbindVideo: (() => void) | null = null;
+  #slotChangeListener: (() => void) | null = null;
 
   static get observedAttributes(): readonly string[] {
     return OBSERVED_ATTRIBUTES;
@@ -23,10 +33,25 @@ export class BachPlayerElement extends HTMLElement {
   }
 
   connectedCallback(): void {
-    this.#video = this.querySelector<HTMLVideoElement>('video[slot="media"]');
     if (this.state.headless.value) {
       this.setAttribute('headless', '');
     }
+    this.#attachVideoFromSlot();
+
+    const mediaSlot = this.#shadow.querySelector<HTMLSlotElement>('slot[name="media"]');
+    if (mediaSlot) {
+      const listener = (): void => this.#attachVideoFromSlot();
+      mediaSlot.addEventListener('slotchange', listener);
+      this.#slotChangeListener = (): void => mediaSlot.removeEventListener('slotchange', listener);
+    }
+  }
+
+  disconnectedCallback(): void {
+    this.#unbindVideo?.();
+    this.#unbindVideo = null;
+    this.#slotChangeListener?.();
+    this.#slotChangeListener = null;
+    this.#video = null;
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
@@ -36,6 +61,7 @@ export class BachPlayerElement extends HTMLElement {
         break;
       case 'muted':
         this.state.muted.value = value !== null;
+        if (this.#video) this.#video.muted = value !== null;
         break;
       case 'headless':
         this.state.headless.value = value !== null;
@@ -47,6 +73,16 @@ export class BachPlayerElement extends HTMLElement {
 
   get video(): HTMLVideoElement | null {
     return this.#video;
+  }
+
+  #attachVideoFromSlot(): void {
+    const next = this.querySelector<HTMLVideoElement>('video[slot="media"]');
+    if (next === this.#video) return;
+
+    this.#unbindVideo?.();
+    this.#unbindVideo = null;
+    this.#video = next;
+    if (next) this.#unbindVideo = bindVideoToState(next, this.state);
   }
 }
 
