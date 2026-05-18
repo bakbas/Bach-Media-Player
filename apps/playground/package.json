@@ -1,0 +1,26 @@
+{
+  "name": "@bach/playground",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Interactive Vite playground for Bach Media Player — controls demo, theme switcher, headless mode toggle.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@bach/a11y": "workspace:*",
+    "@bach/core": "workspace:*",
+    "@bach/engine-hls": "workspace:*",
+    "@bach/engine-native": "workspace:*",
+    "@bach/ui": "workspace:*",
+    "hls.js": "^1.5.20"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

@@ -1,0 +1,110 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #0b0d10;
+  color: #e8e8e8;
+}
+
+body {
+  margin: 0;
+  display: grid;
+  gap: 24px;
+  padding: 32px;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  margin: 0 0 4px;
+}
+.tagline {
+  margin: 0;
+  color: #888;
+}
+
+.stage bach-player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.stage video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.panel {
+  background: #14171c;
+  border-radius: 12px;
+  padding: 20px;
+}
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+.muted {
+  color: #888;
+  margin: 0 0 12px;
+}
+
+.theme-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+button {
+  background: #1f2329;
+  color: #e8e8e8;
+  border: 1px solid #2c3138;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font: inherit;
+}
+button:hover {
+  background: #262b32;
+}
+button.theme[aria-pressed="true"] {
+  border-color: #6dabff;
+}
+
+textarea {
+  width: 100%;
+  background: #0b0d10;
+  color: #e8e8e8;
+  border: 1px solid #2c3138;
+  border-radius: 6px;
+  padding: 10px;
+  font: 13px ui-monospace, monospace;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+pre {
+  background: #0b0d10;
+  border: 1px solid #2c3138;
+  border-radius: 6px;
+  padding: 10px;
+  font: 12px ui-monospace, monospace;
+  margin: 12px 0 0;
+  max-height: 200px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

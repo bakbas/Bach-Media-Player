@@ -3,6 +3,13 @@ export { bindVideoToState } from './video-binding.js';
 export { createPlayerState, type PlayerState, type PlayerStateSnapshot } from './state.js';
 export { createEventBus, type EventBus } from './event-bus.js';
 export {
+  applyTheme,
+  type ApplyThemeResult,
+  type ThemeLayout,
+  type ThemeManifest,
+  type ThemeRejection,
+} from './theme.js';
+export {
   CSS_VARIABLE_TOKENS,
   PART_NAMES,
   type BachCssVariable,

@@ -1,4 +1,5 @@
 import { type PlayerState, createPlayerState } from './state.js';
+import { type ApplyThemeResult, applyTheme } from './theme.js';
 import { bindVideoToState } from './video-binding.js';
 
 const OBSERVED_ATTRIBUTES = ['src', 'autoplay', 'muted', 'headless', 'theme'] as const;
@@ -73,6 +74,15 @@ export class BachPlayerElement extends HTMLElement {
 
   get video(): HTMLVideoElement | null {
     return this.#video;
+  }
+
+  /**
+   * Apply a theme manifest at runtime. Validates the manifest against the
+   * public token contract and applies only the keys that pass — see
+   * `applyTheme` in `theme.ts` for the full security model.
+   */
+  applyTheme(manifest: unknown): ApplyThemeResult {
+    return applyTheme(this, manifest);
   }
 
   #attachVideoFromSlot(): void {

@@ -54,6 +54,40 @@ importers:
         specifier: ^2.1.5
         version: 2.1.9(@types/node@22.19.19)(@vitest/browser@2.1.9)(happy-dom@15.11.7)(msw@2.14.6(@types/node@22.19.19)(typescript@5.6.3))
 
+  apps/playground:
+    dependencies:
+      '@bach/a11y':
+        specifier: workspace:*
+        version: link:../../packages/a11y
+      '@bach/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@bach/engine-hls':
+        specifier: workspace:*
+        version: link:../../packages/engine-hls
+      '@bach/engine-native':
+        specifier: workspace:*
+        version: link:../../packages/engine-native
+      '@bach/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      hls.js:
+        specifier: ^1.5.20
+        version: 1.6.16
+    devDependencies:
+      vite:
+        specifier: ^5.4.10
+        version: 5.4.21(@types/node@22.19.19)
+
+  e2e:
+    devDependencies:
+      '@bach/playground':
+        specifier: workspace:*
+        version: link:../apps/playground
+      '@playwright/test':
+        specifier: ^1.48.2
+        version: 1.60.0
+
   packages/a11y:
     devDependencies:
       '@bach/core':
