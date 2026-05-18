@@ -1,0 +1,50 @@
+{
+  "name": "@bach/core",
+  "version": "0.0.0",
+  "description": "Bach Media Player core: <bach-player> element, signals state, codec negotiator, EME orchestrator.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["./src/define.ts", "./dist/define.js", "./dist/define.cjs"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "import": "./dist/define.js",
+      "require": "./dist/define.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:browser": "vitest run --browser",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@preact/signals-core": "^1.8.0"
+  },
+  "devDependencies": {
+    "@bach/testing": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/core (ESM, gzipped)",
+      "path": "dist/index.js",
+      "limit": "100 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
