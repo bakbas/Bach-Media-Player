@@ -18,6 +18,7 @@ export class FakeMediaElement {
   muted = false;
   volume = 1;
   readyState = 0;
+  error: { code: number; message: string } | null = null;
   #buffered: ReadonlyArray<[number, number]>;
   #listeners = new Map<string, Set<Listener>>();
 
