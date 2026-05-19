@@ -10,6 +10,9 @@ import type { BachPlayerElement, applyTheme } from '@bach/core';
 import '@bach/core/define';
 import { createHlsEngine } from '@bach/engine-hls';
 import { createNativeEngine } from '@bach/engine-native';
+import type { BachGpuFxElement } from '@bach/gpu-fx';
+import { type Effect, PRESETS as GPU_PRESETS, buildPipelineSpec } from '@bach/gpu-fx';
+import '@bach/gpu-fx/define';
 import '@bach/ui/define';
 import Hls from 'hls.js';
 import { PRESETS } from './themes.js';
@@ -168,6 +171,46 @@ document.getElementById('captions-reset')?.addEventListener('click', () => {
 });
 
 renderTranscript();
+
+// ----- GPU effects (Akustik) demo ----------------------------------------
+
+const gpuFx = player.querySelector('bach-gpu-fx') as BachGpuFxElement;
+const fxOutput = document.getElementById('fx-output') as HTMLPreElement;
+
+function renderFxState(label: string, chain: ReadonlyArray<Effect>): void {
+  if (chain.length === 0) {
+    fxOutput.textContent = `[${label}] (no effects)`;
+    return;
+  }
+  const spec = buildPipelineSpec({ effects: chain });
+  const summary = spec.passes.map((p) => `  ${p.id} (${p.uniforms.length} uniforms)`).join('\n');
+  fxOutput.textContent = `[${label}] ${spec.passes.length} pass(es):\n${summary}`;
+}
+
+gpuFx.addEventListener('bach:gpu-fx-chain', (event) => {
+  const { chain } = (event as CustomEvent<{ chain: Effect[] }>).detail;
+  renderFxState('event', chain);
+});
+
+for (const button of document.querySelectorAll<HTMLButtonElement>('button.fx')) {
+  button.addEventListener('click', () => {
+    const fx = button.dataset.fx as keyof typeof GPU_PRESETS | 'off';
+    if (fx === 'off') {
+      gpuFx.removeAttribute('preset');
+      gpuFx.setChain([]);
+      renderFxState('off', []);
+    } else {
+      gpuFx.setAttribute('preset', fx);
+      gpuFx.setChain([]);
+      renderFxState(fx, GPU_PRESETS[fx]);
+    }
+    for (const btn of document.querySelectorAll<HTMLButtonElement>('button.fx')) {
+      btn.setAttribute('aria-pressed', String(btn === button));
+    }
+  });
+}
+
+renderFxState('idle', []);
 
 // ----- Live state read-out ------------------------------------------------
 
