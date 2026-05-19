@@ -1,0 +1,37 @@
+---
+title: Polifoni — audio mix
+description: Multi-track audio mixing, equal-power crossfade, spectral analyzer.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Phase 4 — in development">
+  `@bach/audio-mix` is scheduled for Phase 4 of the master plan. This page
+  documents the shipping shape; the package itself is not yet published.
+</Aside>
+
+## Planned API
+
+```ts
+import { createAudioMixer } from '@bach/audio-mix';
+
+const mixer = createAudioMixer({
+  context: new AudioContext(),
+  master: hostVideoElement,
+});
+
+mixer.addTrack({ id: 'commentary', src: 'commentary.mp4' });
+mixer.crossfade('main', 'commentary', { durationSec: 1.5, curve: 'equal-power' });
+
+mixer.on('analyser', (frame) => {
+  // 256-bin frequency data for the spectral overlay.
+});
+```
+
+## Targets
+
+- `AudioContext` graph with per-track `GainNode` + master bus.
+- Master/slave time sync between tracks, drift target < 50 ms.
+- Equal-power crossfader.
+- Spectral analyzer overlay backed by `AnalyserNode`.
+- Track add/remove at runtime without resync glitch.

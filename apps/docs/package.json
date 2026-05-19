@@ -1,0 +1,20 @@
+{
+  "name": "@bach/docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bach Media Player documentation site — Astro + Starlight.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4321",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 4322",
+    "typecheck": "astro check",
+    "clean": "rm -rf dist .astro .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.30.0",
+    "astro": "^5.0.0",
+    "sharp": "^0.33.5"
+  }
+}

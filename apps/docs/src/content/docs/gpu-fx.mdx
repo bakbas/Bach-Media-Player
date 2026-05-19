@@ -1,0 +1,32 @@
+---
+title: Akustik — GPU FX
+description: WebGPU shader pipeline for color grade, blur, watermark, 3D LUT.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Phase 4 — in development">
+  `@bach/gpu-fx` is scheduled for Phase 4. This page is a preview of the
+  shipping shape; the package is not yet published.
+</Aside>
+
+## Planned API
+
+```ts
+import { createGpuFxPipeline } from '@bach/gpu-fx';
+
+const pipeline = await createGpuFxPipeline({ video: hostVideoElement });
+pipeline.use('color-grade', { exposure: 1.05, lift: [0, 0, 0.02] });
+pipeline.use('lut', { src: '/luts/teal-orange.cube' });
+pipeline.use('watermark', { src: '/brand.png', position: 'br' });
+```
+
+## Targets
+
+- WebGPU context with `importExternalTexture(video)` zero-copy path.
+- WGSL shader library: color grade, blur region (PII), watermark, 3D
+  LUT (`.cube` loader), film grain.
+- Preset chain composition (effects stack, reorderable).
+- WebGL2 fallback for the color-grade pass.
+- Performance gate: 1080p60 + 3-pass chain under 16 ms/frame on
+  M-series / RTX.

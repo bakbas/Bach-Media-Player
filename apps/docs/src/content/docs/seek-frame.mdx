@@ -1,0 +1,101 @@
+---
+title: Hassasiyet — frame-accurate seek
+description: WebCodecs VideoDecoder + MP4Box.js + LRU frame cache, with a currentTime fallback.
+---
+
+The seek-frame package gives you the four primitives a precision-review
+workflow needs. Every module is parser-agnostic; MP4Box.js is an
+optional peer dependency.
+
+## Quick start
+
+```bash
+pnpm add @bach/seek-frame mp4box
+```
+
+```ts
+import '@bach/seek-frame/define';
+import * as MP4Box from 'mp4box';
+import {
+  createDecoderController,
+  createFrameCache,
+  createFrameStepper,
+  createMp4BoxSource,
+  isWebCodecsSupported,
+} from '@bach/seek-frame';
+
+const buffer = await fetch('clip.mp4').then((r) => r.arrayBuffer());
+const source = await createMp4BoxSource({ MP4Box, data: buffer });
+
+const decoder = createDecoderController((opts) => {
+  const d = new VideoDecoder({ output: opts.output, error: opts.error });
+  return d;
+});
+decoder.configure({ codec: source.codec });
+
+const stepper = createFrameStepper({
+  index: source.index,
+  decoder,
+  cache: createFrameCache({ maxBytes: 128 * 1024 * 1024 }),
+  fetchSampleBytes: (frame) =>
+    source.data[source.index.frames.indexOf(frame)] ?? new Uint8Array(),
+  toChunk: (frame, bytes) =>
+    new EncodedVideoChunk({
+      type: frame.sync ? 'key' : 'delta',
+      timestamp: frame.pts * 1e6,
+      duration: frame.duration * 1e6,
+      data: bytes,
+    }),
+});
+
+await stepper.at(12.345);   // seek to a precise wall-clock time
+await stepper.next();       // step one frame forward
+await stepper.prev();       // step one frame backward
+```
+
+## Fallback path
+
+`isWebCodecsSupported()` tells you whether to mount the WebCodecs path
+or use `createCurrentTimeFallback({ index, video })`, which drives the
+underlying `<video>` element's `currentTime` and waits for the
+`seeked` event. The API surface is identical so your UI code does not
+fork.
+
+## Pointer-preview thumbnails
+
+```ts
+import { createScrubEngine } from '@bach/seek-frame';
+
+const scrub = createScrubEngine({
+  stepper,
+  index: source.index,
+  strategy: 'dense',
+  density: 32,
+});
+await scrub.warmup();
+
+progressBar.addEventListener('pointermove', (event) => {
+  const time = (event.offsetX / progressBar.clientWidth) * source.index.duration;
+  scrub.hover(time);
+});
+```
+
+Both `keyframe-only` (cheap, hover routes to the preceding sync sample)
+and `dense` (warmup pre-decodes N evenly spaced thumbnails) strategies
+debounce hover events so aggressive scrubbing never blows up the
+decoder queue.
+
+## `<bach-seek-frame>` element
+
+```html
+<bach-player>
+  <video slot="media"></video>
+  <bach-seek-frame></bach-seek-frame>
+</bach-player>
+```
+
+```ts
+const el = document.querySelector('bach-seek-frame');
+el?.setStepper(stepper);
+// "," and "." now step prev/next on the host player.
+```

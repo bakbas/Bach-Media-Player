@@ -1,0 +1,85 @@
+---
+title: Theming baseline
+description: CSS variables, stable parts, slot composition, applyTheme manifests.
+---
+
+Bach is engineered around three theming surfaces — each one is public
+API and bound by semver from `1.0.0` onward.
+
+## CSS custom properties
+
+Every visual primitive reads from a documented token. Override them on
+the host element or its ancestor:
+
+```css
+bach-player {
+  --bach-color-bg: oklch(0.16 0 0);
+  --bach-color-fg: oklch(0.96 0 0);
+  --bach-color-accent: oklch(0.7 0.18 250);
+  --bach-radius: 12px;
+  --bach-control-size: 36px;
+}
+```
+
+The full set ships in `CSS_VARIABLE_TOKENS` from `@bach/core`. Each
+token has a documented `type` (color, length, font-family) and a short
+description — readable both by humans and by an AI vibe coder.
+
+## Shadow DOM parts
+
+Style any interactive element directly via `::part()`:
+
+```css
+bach-player::part(play-button) {
+  background: oklch(0.65 0.18 250);
+  color: white;
+}
+bach-player::part(progress-fill) {
+  background: linear-gradient(90deg, #ff0066, #ff6600);
+}
+```
+
+Documented parts include `play-button`, `progress-bar`, `progress-fill`,
+`progress-buffer`, `progress-thumb`, `timeline`, `volume-button`,
+`volume-slider`, `volume-slider-fill`, `time-display`,
+`fullscreen-button`, `caption-cue`, `consent-card`, `chrome`.
+
+## Slot composition
+
+Replace any region of the chrome with your own component:
+
+```html
+<bach-player>
+  <video slot="media" crossorigin></video>
+  <my-custom-controls slot="controls"></my-custom-controls>
+</bach-player>
+```
+
+## Headless mode
+
+```html
+<bach-player headless src="video.m3u8">
+  <video slot="media"></video>
+</bach-player>
+```
+
+Hides every default chrome region; state is still queryable via
+`player.state` and the bound video stays driveable from your own UI.
+
+## Runtime `applyTheme()`
+
+```ts
+player.applyTheme({
+  version: 1,
+  cssVariables: {
+    '--bach-color-accent': 'oklch(0.7 0.18 30)',
+    '--bach-radius': '20px',
+  },
+  layout: 'cinematic',
+});
+```
+
+Returns `{ applied, rejected, layout }` so you can show precise
+diagnostics. The same parser gates the Conducting protocol — see the
+[security model](https://github.com/bakbas/Bach-Media-Player/blob/main/SECURITY.md)
+for the full sandbox invariants.

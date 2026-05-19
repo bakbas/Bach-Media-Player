@@ -1,0 +1,49 @@
+---
+title: Bach Media Player
+description: Composable, themable, AI-native web media player.
+template: splash
+hero:
+  tagline: Five signature capabilities no single open-source player ships together.
+  actions:
+    - text: Install
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: GitHub
+      link: https://github.com/bakbas/Bach-Media-Player
+      icon: external
+      variant: secondary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## The five signatures
+
+<CardGrid>
+  <Card title="Notasyon" icon="document">
+    In-browser AI captions via Whisper + Transformers.js. Zero server,
+    audio never leaves the device.
+  </Card>
+  <Card title="Hassasiyet" icon="setting">
+    Frame-accurate seek and stepping built on WebCodecs + MP4Box.js.
+  </Card>
+  <Card title="Polifoni" icon="add-document">
+    Multi-track audio mixing, equal-power crossfade, spectral analyzer.
+  </Card>
+  <Card title="Akustik" icon="laptop">
+    Real-time GPU video effects via WebGPU shaders.
+  </Card>
+  <Card title="Conducting" icon="rocket">
+    World-first live director mode — a livestreamer changes every
+    viewer's UI in real time via signed, sandboxed theme manifests.
+  </Card>
+</CardGrid>
+
+## Theming baseline
+
+Underneath the five signatures sits a documented theming surface — CSS
+variables, stable `::part()` names, slot composition, a `headless`
+attribute, and a schema-strict `applyTheme()` runtime. The same parser
+gates the Conducting protocol, so the security model is shared.
+
+See [Theming](/theming/) for the full token catalogue.

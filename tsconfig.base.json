@@ -31,5 +31,5 @@
 
     "experimentalDecorators": false
   },
-  "exclude": ["node_modules", "dist", "build", "coverage", ".turbo"]
+  "exclude": ["node_modules", "dist", "build", "coverage", ".turbo", "apps/docs"]
 }

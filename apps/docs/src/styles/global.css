@@ -1,0 +1,10 @@
+/*
+ * Brand overrides for Starlight. Keep this short — the design system
+ * itself is owned by @bach/themes once Phase 5 lands.
+ */
+:root {
+  --sl-color-accent-low: oklch(0.25 0.08 250);
+  --sl-color-accent: oklch(0.7 0.18 250);
+  --sl-color-accent-high: oklch(0.85 0.12 250);
+  --sl-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
