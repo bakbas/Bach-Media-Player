@@ -1,0 +1,77 @@
+---
+title: Notasyon — AI captions
+description: In-browser Whisper via Transformers.js. Zero audio leaves the device.
+---
+
+Bach captions ship as a small pipeline of pure modules plus an
+optional Transformers.js binding. Every step is parser-agnostic so you
+can plug in a different transcription engine without rewriting the UI.
+
+## Quick start
+
+```bash
+pnpm add @bach/captions-ai @huggingface/transformers
+```
+
+```ts
+import '@bach/core/define';
+import '@bach/captions-ai/define';
+import { pipeline } from '@huggingface/transformers';
+import {
+  createAudioChunker,
+  createTranscriptionController,
+} from '@bach/captions-ai';
+import { createWhisperEngine } from '@bach/captions-ai/whisper';
+
+const engine = await createWhisperEngine({
+  pipeline,
+  model: 'tiny',
+  onProgress: (event) => console.log('whisper:', event),
+});
+
+const controller = createTranscriptionController({
+  engine,
+  chunker: { sourceSampleRate: 48_000 },
+  onSegments: (segments) => {
+    document.querySelector('bach-captions')?.setSegments(segments);
+  },
+});
+
+// Feed PCM samples from an AudioWorklet:
+audioWorkletNode.port.onmessage = (event) => {
+  controller.push(event.data.samples, event.data.channels);
+};
+```
+
+## Consent
+
+The `<bach-captions-consent>` element gates the 39 MB Whisper download.
+On the first prompt the user sees the model size; their decision
+persists in `localStorage` so the next session short-circuits.
+
+```html
+<bach-player>
+  <video slot="media"></video>
+  <bach-captions></bach-captions>
+  <bach-captions-consent model="tiny"></bach-captions-consent>
+</bach-player>
+```
+
+```ts
+const consent = document.querySelector('bach-captions-consent')!;
+consent.addEventListener('bach:captions-consent', (event) => {
+  if (event.detail.decision === 'granted') {
+    // Load the engine, wire it to consent.setProgress() for the bar.
+  }
+});
+await consent.resolve(); // opens the dialog only if the decision is unknown
+```
+
+## Privacy
+
+Audio bytes stay on-device. The Phase 2 E2E suite monitors every
+outbound request during the captions flow and fails on any third-party
+host that receives an audio MIME type or an octet-stream POST body.
+
+If you bring your own engine that does require network access, that's
+your call — the Bach binding never adds one.

@@ -1,0 +1,58 @@
+---
+title: Conducting — live director mode
+description: A livestreamer changes every viewer's player UI in real time.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Phase 5 — in development">
+  `@bach/conduct` is scheduled for Phase 5. This page documents the
+  designed shipping shape; the package itself is not yet published. The
+  security model below already gates `applyTheme()` in `@bach/core`.
+</Aside>
+
+## Concept
+
+While a livestream is running, the broadcaster pushes UI changes that
+land on every viewer's player within ~100 ms. A goal preset for the
+sports producer, a beat-synced colour pulse for the DJ set, a "this
+matters" highlight for the educator — all without rebuilding the page
+or relying on a third-party renderer.
+
+## Wire protocol
+
+`bach.conduct.v1` over WebSocket (binary frames) or SSE fallback. The
+broadcaster signs each `theme.json` manifest with an Ed25519 key; the
+viewer's `<bach-conduct>` element verifies with the matching public key
+before applying.
+
+## Sandbox invariants
+
+The parser is the security boundary, not the renderer:
+
+1. **Schema-strict** — unknown top-level keys, unknown CSS variable
+   names, and unknown layout enum values are rejected.
+2. **Per-type regex** — color, length, font-family, and enum values
+   match narrow regexes. `<`, `>`, `;`, `url(`, `expression(`,
+   `script`, `style`, `data:`, `javascript:` all reject.
+3. **No raw HTML, no raw CSS, no JS.** The manifest cannot declare
+   `--bach-custom-css`, an HTML fragment, or an event handler.
+4. **Signature verification.** Every manifest is verified against the
+   broadcaster public key. Mismatch → silent drop +
+   `bach:conduct-rejected` event for telemetry.
+5. **Rate limiting.** Viewer drops manifests above `N`/s (default 10)
+   so flicker / seizure attacks via rapid colour swaps don't land.
+6. **Photosensitive epilepsy guard.** Optional
+   `prefers-reduced-motion`-aware mode caps the rate of background and
+   contrast deltas.
+
+## Director SPA
+
+A reference broadcaster UI (`apps/director`) ships alongside the
+package: live theme editor, preview, push button, AI assist for natural
+language → manifest generation.
+
+## Recording
+
+When a stream is recorded, manifest events are embedded in the VOD
+timeline so the on-demand replay reproduces the same UI moments.

@@ -1,0 +1,88 @@
+---
+title: Installation
+description: Install the core element and any signature packages you want.
+---
+
+Bach Media Player is published as a set of npm packages under the
+`@bach/*` scope. The core element is mandatory; every signature package
+is opt-in and contributes nothing to your bundle until imported.
+
+## Core element
+
+```bash
+pnpm add @bach/core
+```
+
+```ts
+import '@bach/core/define';
+```
+
+```html
+<bach-player src="video.m3u8">
+  <video slot="media" crossorigin></video>
+</bach-player>
+```
+
+## Streaming engines
+
+You install the engines you need. `@bach/engine-hls` requires `hls.js`
+as a peer dep; `@bach/engine-dash` requires `shaka-player`.
+
+```bash
+pnpm add @bach/engine-hls hls.js
+pnpm add @bach/engine-dash shaka-player
+pnpm add @bach/engine-native
+```
+
+```ts
+import Hls from 'hls.js';
+import { createHlsEngine } from '@bach/engine-hls';
+
+const engine = createHlsEngine({ Hls });
+```
+
+## UI controls
+
+```bash
+pnpm add @bach/ui
+```
+
+```ts
+import '@bach/ui/define';
+```
+
+```html
+<bach-controls slot="controls">
+  <bach-play-button></bach-play-button>
+  <bach-progress></bach-progress>
+  <bach-time></bach-time>
+  <bach-volume></bach-volume>
+  <bach-fullscreen-button></bach-fullscreen-button>
+</bach-controls>
+```
+
+## Signature packages
+
+| Package | What it gives you |
+|---|---|
+| `@bach/captions-ai` | In-browser AI captions (Notasyon). |
+| `@bach/seek-frame` | Frame-accurate seek (Hassasiyet). |
+| `@bach/audio-mix` | Multi-track audio mixing (Polifoni, Phase 4). |
+| `@bach/gpu-fx` | WebGPU shader pipeline (Akustik, Phase 4). |
+| `@bach/conduct` | Live director mode (Conducting, Phase 5). |
+
+## A11y
+
+```bash
+pnpm add @bach/a11y
+```
+
+```ts
+import { installKeyboardShortcuts } from '@bach/a11y';
+
+const player = document.querySelector('bach-player')!;
+installKeyboardShortcuts(player);
+```
+
+The shortcut map mirrors YouTube / Vimeo. Editable elements and
+modifier-held strokes are ignored automatically.
