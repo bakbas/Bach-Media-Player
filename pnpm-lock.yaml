@@ -163,6 +163,12 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/gpu-fx:
+    devDependencies:
+      '@bach/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/seek-frame:
     dependencies:
       mp4box:

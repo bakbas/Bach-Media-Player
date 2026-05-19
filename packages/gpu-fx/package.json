@@ -1,0 +1,50 @@
+{
+  "name": "@bach/gpu-fx",
+  "version": "0.0.0",
+  "description": "Bach Media Player Akustik — WebGPU shader pipeline for color grade, blur, watermark, 3D LUT, film grain.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["./src/define.ts", "./dist/define.js", "./dist/define.cjs"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "import": "./dist/define.js",
+      "require": "./dist/define.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:browser": "vitest run --browser",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/gpu-fx (ESM, gzipped)",
+      "path": "dist/index.js",
+      "limit": "10 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
