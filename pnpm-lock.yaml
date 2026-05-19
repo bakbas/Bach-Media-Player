@@ -134,6 +134,12 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/conduct:
+    devDependencies:
+      '@bach/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/core:
     dependencies:
       '@preact/signals-core':
