@@ -1,0 +1,50 @@
+{
+  "name": "@bach/seek-frame",
+  "version": "0.0.0",
+  "description": "Bach Media Player frame-accurate seek — WebCodecs VideoDecoder + MP4Box.js keyframe index + LRU frame cache.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:browser": "vitest run --browser",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*",
+    "mp4box": "^0.5.2"
+  },
+  "peerDependenciesMeta": {
+    "mp4box": { "optional": true }
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/seek-frame (ESM, gzipped, mp4box external)",
+      "path": "dist/index.js",
+      "ignore": ["mp4box"],
+      "limit": "6 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
