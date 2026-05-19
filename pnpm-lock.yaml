@@ -109,6 +109,12 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/audio-mix:
+    devDependencies:
+      '@bach/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/captions-ai:
     dependencies:
       '@huggingface/transformers':
