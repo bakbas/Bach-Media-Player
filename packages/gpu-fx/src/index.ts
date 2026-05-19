@@ -56,4 +56,18 @@ export {
   isWebGpuSupported,
 } from './device.js';
 
+export {
+  type AuxiliaryResource,
+  type BuildPipelineSpecOptions,
+  type PassSpec,
+  type PipelineSpec,
+  buildPipelineSpec,
+} from './pipeline-spec.js';
+
+export {
+  type CanvasFallback,
+  type CanvasFallbackOptions,
+  createCanvasFallback,
+} from './fallback.js';
+
 export { BachGpuFxElement } from './element.js';

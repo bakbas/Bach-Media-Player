@@ -71,6 +71,9 @@ importers:
       '@bach/a11y':
         specifier: workspace:*
         version: link:../../packages/a11y
+      '@bach/audio-mix':
+        specifier: workspace:*
+        version: link:../../packages/audio-mix
       '@bach/captions-ai':
         specifier: workspace:*
         version: link:../../packages/captions-ai
@@ -83,6 +86,9 @@ importers:
       '@bach/engine-native':
         specifier: workspace:*
         version: link:../../packages/engine-native
+      '@bach/gpu-fx':
+        specifier: workspace:*
+        version: link:../../packages/gpu-fx
       '@bach/ui':
         specifier: workspace:*
         version: link:../../packages/ui

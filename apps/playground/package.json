@@ -14,10 +14,12 @@
   },
   "dependencies": {
     "@bach/a11y": "workspace:*",
+    "@bach/audio-mix": "workspace:*",
     "@bach/captions-ai": "workspace:*",
     "@bach/core": "workspace:*",
     "@bach/engine-hls": "workspace:*",
     "@bach/engine-native": "workspace:*",
+    "@bach/gpu-fx": "workspace:*",
     "@bach/ui": "workspace:*",
     "hls.js": "^1.5.20"
   },
