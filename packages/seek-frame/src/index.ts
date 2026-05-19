@@ -35,3 +35,25 @@ export {
   createCurrentTimeFallback,
   createFrameStepper,
 } from './frame-stepper.js';
+
+export {
+  type CreateMp4BoxSourceOptions,
+  type Mp4BoxFileLike,
+  type Mp4BoxInfo,
+  type Mp4BoxNamespace,
+  type Mp4BoxSample,
+  type Mp4BoxSourceResult,
+  type Mp4BoxTrack,
+  createMp4BoxSource,
+  sampleToFrame,
+} from './mp4box-source.js';
+
+export {
+  type ScrubEngine,
+  type ScrubEngineOptions,
+  type ScrubStrategy,
+  createScrubEngine,
+  denseThumbnailPlan,
+} from './scrub-engine.js';
+
+export { BachSeekFrameElement } from './element.js';

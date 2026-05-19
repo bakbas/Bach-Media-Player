@@ -4,12 +4,17 @@
   "description": "Bach Media Player frame-accurate seek — WebCodecs VideoDecoder + MP4Box.js keyframe index + LRU frame cache.",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": ["./src/define.ts", "./dist/define.js", "./dist/define.cjs"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "import": "./dist/define.js",
+      "require": "./dist/define.cjs"
     }
   },
   "main": "./dist/index.cjs",
