@@ -43,4 +43,18 @@ export {
   createConductViewer,
 } from './viewer.js';
 
+export {
+  type BroadcasterOptions,
+  type BroadcasterSender,
+  type ConductBroadcaster,
+  createConductBroadcaster,
+} from './broadcaster.js';
+
+export {
+  type FuzzCase,
+  type FuzzReport,
+  generateFuzzCases,
+  runFuzz,
+} from './fuzz.js';
+
 export { BachConductElement } from './element.js';
