@@ -1,0 +1,74 @@
+{
+  "name": "@bach/themes",
+  "version": "0.0.0",
+  "description": "Bach Media Player — curated theme presets (Minimal, Cinematic, Broadcast, Terminal, Vintage) and helpers for the Phase 5 Theme Universe.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./minimal": {
+      "types": "./dist/minimal.d.ts",
+      "import": "./dist/minimal.js",
+      "require": "./dist/minimal.cjs"
+    },
+    "./cinematic": {
+      "types": "./dist/cinematic.d.ts",
+      "import": "./dist/cinematic.js",
+      "require": "./dist/cinematic.cjs"
+    },
+    "./broadcast": {
+      "types": "./dist/broadcast.d.ts",
+      "import": "./dist/broadcast.js",
+      "require": "./dist/broadcast.cjs"
+    },
+    "./terminal": {
+      "types": "./dist/terminal.d.ts",
+      "import": "./dist/terminal.js",
+      "require": "./dist/terminal.cjs"
+    },
+    "./vintage": {
+      "types": "./dist/vintage.d.ts",
+      "import": "./dist/vintage.js",
+      "require": "./dist/vintage.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/themes (full index, gzipped)",
+      "path": "dist/index.js",
+      "limit": "4 KB"
+    },
+    {
+      "name": "@bach/themes/minimal (single preset, gzipped)",
+      "path": "dist/minimal.js",
+      "limit": "1 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

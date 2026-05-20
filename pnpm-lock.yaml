@@ -193,6 +193,12 @@ importers:
 
   packages/testing: {}
 
+  packages/themes:
+    devDependencies:
+      '@bach/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/ui:
     dependencies:
       '@preact/signals-core':
