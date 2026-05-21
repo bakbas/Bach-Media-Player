@@ -46,6 +46,28 @@
       </section>
 
       <section class="panel">
+        <h2>AI theme assist</h2>
+        <p class="muted">
+          Describe a vibe in plain English; the playground builds the Claude API request a
+          model would receive (system prompt + schema spec + the documented CSS variable
+          contract). The request is shown verbatim so you can paste it into your own
+          Anthropic SDK call, or pre-flight it through the public Workers AI gateway you ship
+          alongside your director SPA.
+        </p>
+        <div class="row">
+          <input
+            type="text"
+            id="ai-prompt"
+            data-testid="ai-prompt"
+            placeholder='e.g. "neon synthwave"'
+            size="40"
+          />
+          <button id="ai-generate" data-testid="ai-generate">Build prompt</button>
+        </div>
+        <pre id="ai-output" data-testid="ai-output" aria-live="polite"></pre>
+      </section>
+
+      <section class="panel">
         <h2>GPU effects (Akustik)</h2>
         <p class="muted">
           Pick a preset or build your own effect chain. The pipeline spec built here is the

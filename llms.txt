@@ -1,0 +1,52 @@
+# Bach Media Player
+
+> Composable, themable, AI-native web media player. Five signature differentiators (Notasyon, Hassasiyet, Polifoni, Akustik, Conducting) on top of a Web Components core with a documented theming surface.
+
+Bach is designed so that a model can produce a working integration on the first prompt. Every public token, part, and slot is documented; every signature ships as an opt-in package so the consumer only pays for what they use.
+
+## Core
+
+- [packages/core/README.md](packages/core/README.md): the `<bach-player>` element, signals state, codec negotiator, EME orchestrator, theming contract (CSS variables + `::part()`), runtime `applyTheme()`.
+- [ARCHITECTURE.md](ARCHITECTURE.md): pillars, element graph, data flow, engine adapter contract, EME state machine, plugin lifecycle, WebGPU pipeline, Conducting protocol.
+- [FEATURES.md](FEATURES.md): full capability checklist grouped into signatures, baseline, and theming.
+
+## Theming baseline
+
+- [packages/core/src/theming.ts](packages/core/src/theming.ts): every documented CSS variable token (name, type, description). Stable public API.
+- [packages/core/src/theme.ts](packages/core/src/theme.ts): `applyTheme()` schema-strict validator. Same parser gates the Conducting protocol.
+- [packages/themes/README.md](packages/themes/README.md): five curated presets — `minimal`, `cinematic`, `broadcast`, `terminal`, `vintage`. Subpath imports for tree-shake.
+- [packages/tailwind/README.md](packages/tailwind/README.md): Tailwind preset exposing every Bach token as `bach-*` theme entries.
+
+## Five signatures (one package each, opt-in)
+
+- [packages/captions-ai/README.md](packages/captions-ai/README.md): Notasyon — in-browser Whisper via Transformers.js; opt-in consent dialog; privacy assertion E2E.
+- [packages/seek-frame/README.md](packages/seek-frame/README.md): Hassasiyet — WebCodecs `VideoDecoder` + MP4Box.js index + LRU frame cache + scrub engine; `currentTime` fallback.
+- [packages/audio-mix/README.md](packages/audio-mix/README.md): Polifoni — Web Audio multi-track mixer + equal-power crossfade + drift sync + spectral analyzer feed.
+- [packages/gpu-fx/README.md](packages/gpu-fx/README.md): Akustik — WGSL shader library + pipeline spec + Canvas-2D fallback + four curated presets.
+- [packages/conduct/README.md](packages/conduct/README.md): Conducting — live director mode. Broadcaster Ed25519-signs theme manifests; viewer verifies, runs guards, applies through the sandbox. Includes a 340-case fuzz harness.
+
+## Adapters & engines
+
+- [packages/engine-hls/README.md](packages/engine-hls/README.md): hls.js MSE adapter.
+- [packages/engine-dash/README.md](packages/engine-dash/README.md): Shaka Player adapter.
+- [packages/engine-native/README.md](packages/engine-native/README.md): native `<video>` (Safari/iOS HLS fallback).
+
+## UI + accessibility
+
+- [packages/ui/README.md](packages/ui/README.md): default Web Components controls — play, progress, time, volume, fullscreen. Stable `::part()` names.
+- [packages/a11y/README.md](packages/a11y/README.md): keyboard shortcuts (YouTube-compatible), focus trap, photosensitive-motion damper.
+
+## Demos & docs
+
+- [apps/playground/README.md](apps/playground/README.md): Vite SPA — theme switcher, GPU FX presets, captions consent, conduct status panel.
+- [apps/docs/README.md](apps/docs/README.md): Astro + Starlight documentation site.
+
+## Security
+
+- [SECURITY.md](SECURITY.md): threat model. The `applyTheme` parser is the boundary for both runtime theming and the Conducting protocol; arbitrary HTML, CSS, or JS cannot reach the renderer.
+
+## Project map for models
+
+- Read [`llms-full.txt`](llms-full.txt) for the same map with each section's text inlined.
+- Every package follows the same layout: `src/index.ts` re-exports the public surface; `src/*.test.ts` documents intent; `README.md` explains the use-case in three paragraphs or less.
+- Every public symbol that takes a manifest, preset, or attribute is unit-tested for both happy and hostile inputs.
