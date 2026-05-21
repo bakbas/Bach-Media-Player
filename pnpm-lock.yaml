@@ -89,6 +89,9 @@ importers:
       '@bach/gpu-fx':
         specifier: workspace:*
         version: link:../../packages/gpu-fx
+      '@bach/themes':
+        specifier: workspace:*
+        version: link:../../packages/themes
       '@bach/ui':
         specifier: workspace:*
         version: link:../../packages/ui

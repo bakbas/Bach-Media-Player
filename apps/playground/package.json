@@ -20,6 +20,7 @@
     "@bach/engine-hls": "workspace:*",
     "@bach/engine-native": "workspace:*",
     "@bach/gpu-fx": "workspace:*",
+    "@bach/themes": "workspace:*",
     "@bach/ui": "workspace:*",
     "hls.js": "^1.5.20"
   },
