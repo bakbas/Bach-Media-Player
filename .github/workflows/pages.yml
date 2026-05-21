@@ -1,0 +1,65 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
+  # GH Pages serves the site at https://<owner>.github.io/<repo>/. The
+  # playground assets must resolve under that subpath, so Vite gets the
+  # repo name as its `base` at build time.
+  VITE_BASE: "/Bach-Media-Player/"
+
+jobs:
+  build:
+    name: Build playground
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Build workspace packages
+        # The playground imports every public package via workspace
+        # symlinks, so each one must be built (TS → dist/) before Vite
+        # can resolve them. The library build runs in topological order
+        # via turbo so dependents pick up their dependencies' output.
+        run: pnpm build
+      - name: Build playground SPA
+        run: pnpm --filter @bach/playground build
+      - name: Disable Jekyll on the served site
+        # Stops GH Pages from stripping files that start with an
+        # underscore (Vite emits `_astro`-style asset paths in some
+        # configs; harmless safety net regardless).
+        run: touch apps/playground/dist/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/playground/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

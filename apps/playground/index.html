@@ -30,6 +30,33 @@
       </section>
 
       <section class="panel">
+        <h2>Sample sources</h2>
+        <p class="muted">
+          Click a sample to load it into the player. HLS streams play through
+          <code>@bach/engine-hls</code>; progressive MP4 plays through the
+          native engine. All sources are publicly hosted demo content.
+        </p>
+        <div class="theme-row" id="source-row" data-testid="source-row">
+          <button class="source" data-src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" data-testid="source-mux-tos">
+            HLS · Tears of Steel (Mux)
+          </button>
+          <button class="source" data-src="https://test-streams.mux.dev/pts_shift/master.m3u8" data-testid="source-mux-pts">
+            HLS · PTS shift test
+          </button>
+          <button class="source" data-src="https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" data-testid="source-apple-bipbop">
+            HLS · Apple BipBop (multi-bitrate)
+          </button>
+          <button class="source" data-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" data-testid="source-bbb">
+            MP4 · Big Buck Bunny
+          </button>
+          <button class="source" data-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" data-testid="source-sintel">
+            MP4 · Sintel
+          </button>
+        </div>
+        <pre id="source-output" data-testid="source-output" aria-live="polite"></pre>
+      </section>
+
+      <section class="panel">
         <h2>AI captions (Notasyon)</h2>
         <p class="muted">
           The consent dialog shows on first use. After approval, audio is transcribed in-browser —

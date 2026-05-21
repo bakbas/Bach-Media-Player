@@ -69,8 +69,11 @@ button {
 button:hover {
   background: #262b32;
 }
-button.theme[aria-pressed="true"] {
+button.theme[aria-pressed="true"],
+button.fx[aria-pressed="true"],
+button.source[aria-pressed="true"] {
   border-color: #6dabff;
+  background: #1f2c44;
 }
 
 textarea {
