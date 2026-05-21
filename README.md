@@ -4,6 +4,8 @@
 
 **Status:** Sprint 0 — monorepo bootstrap. Not yet published to npm.
 
+**Live demo:** [bakbas.github.io/Bach-Media-Player](https://bakbas.github.io/Bach-Media-Player/) — the playground SPA. Pick a sample HLS stream or MP4, swap between five theme presets, layer GPU effect chains, exercise the captions consent flow, and read live state in real time.
+
 Bach Media Player is a vanilla TypeScript / Web Components media player engineered around five capabilities that no single open-source player currently offers together:
 
 | Signature | Package | What it does |

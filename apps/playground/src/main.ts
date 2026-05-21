@@ -25,8 +25,7 @@ const video = player.querySelector('video') as HTMLVideoElement;
  * inside <bach-player> itself; until that auto-wiring lands in Phase 1
  * Sprint 6 the playground does the choice explicitly so the demo runs.
  */
-async function bootstrapEngine(): Promise<void> {
-  const src = player.getAttribute('src') ?? '';
+async function bootstrapEngine(src: string): Promise<string> {
   const hls = createHlsEngine({
     Hls: Hls as unknown as Parameters<typeof createHlsEngine>[0]['Hls'],
   });
@@ -35,19 +34,50 @@ async function bootstrapEngine(): Promise<void> {
     if (await engine.canHandle(src)) {
       await engine.attach(video, {});
       await engine.load(src);
-      return;
+      return engine === hls ? '@bach/engine-hls' : '@bach/engine-native';
     }
   }
-  // eslint-disable-next-line no-console
-  console.warn(`[playground] no engine matched ${src}`);
+  return 'no-match';
 }
 
-bootstrapEngine().catch((err) => {
+bootstrapEngine(player.getAttribute('src') ?? '').catch((err) => {
   // eslint-disable-next-line no-console
   console.error('[playground] engine bootstrap failed', err);
 });
 
 installKeyboardShortcuts(player);
+
+// ----- Sample source picker ----------------------------------------------
+
+const sourceOutput = document.getElementById('source-output') as HTMLPreElement;
+
+function highlightSourceButton(activeSrc: string): void {
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('button.source')) {
+    btn.setAttribute('aria-pressed', String(btn.dataset.src === activeSrc));
+  }
+}
+
+highlightSourceButton(player.getAttribute('src') ?? '');
+sourceOutput.textContent = `[idle] ${player.getAttribute('src') ?? '(no source)'}`;
+
+for (const button of document.querySelectorAll<HTMLButtonElement>('button.source')) {
+  button.addEventListener('click', async () => {
+    const src = button.dataset.src;
+    if (!src) return;
+    sourceOutput.textContent = `[loading] ${src}`;
+    highlightSourceButton(src);
+    try {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      player.setAttribute('src', src);
+      const engineName = await bootstrapEngine(src);
+      sourceOutput.textContent = `[loaded via ${engineName}] ${src}`;
+    } catch (err) {
+      sourceOutput.textContent = `[error] ${(err as Error).message}\nsrc: ${src}`;
+    }
+  });
+}
 
 // ----- Theme switcher -----------------------------------------------------
 
