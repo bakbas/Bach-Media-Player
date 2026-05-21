@@ -1,0 +1,54 @@
+{
+  "name": "@bach/react",
+  "version": "0.0.0",
+  "description": "React wrapper for Bach Media Player — type-safe <BachPlayer /> and hooks that subscribe to the signals state. SSR-safe for Next.js App Router.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": false }
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*",
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/react (ESM, gzipped, react external)",
+      "path": "dist/index.js",
+      "ignore": ["react", "react-dom"],
+      "limit": "3 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
