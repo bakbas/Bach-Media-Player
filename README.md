@@ -21,8 +21,10 @@ Beneath the five differentiators sits a deliberate **theming baseline** designed
 - [`FEATURES.md`](./FEATURES.md) — full feature checklist (signatures + baseline + theming).
 - [`ROADMAP.md`](./ROADMAP.md) — phases 1–6 and what's deferred.
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — engine adapter pattern, signals state, plugin lifecycle, conduct protocol.
+- [`THEMING.md`](./THEMING.md) — CSS variable tokens, `::part()` map, slot catalogue, headless mode, theme manifest schema.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — local development, testing, changesets.
 - [`SECURITY.md`](./SECURITY.md) — DRM key discipline, conduct sandbox model, vulnerability reporting.
+- [`RELEASING.md`](./RELEASING.md) — release-blocking gates and the 1.0.0 readiness checklist.
 
 ## Local development
 

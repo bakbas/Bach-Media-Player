@@ -12,6 +12,7 @@ Bach is designed so that a model can produce a working integration on the first 
 
 ## Theming baseline
 
+- [THEMING.md](THEMING.md): public theming contract — CSS variable tokens, `::part()` map, slot catalogue, headless mode, accepted value grammar, manifest schema. Read this first.
 - [packages/core/src/theming.ts](packages/core/src/theming.ts): every documented CSS variable token (name, type, description). Stable public API.
 - [packages/core/src/theme.ts](packages/core/src/theme.ts): `applyTheme()` schema-strict validator. Same parser gates the Conducting protocol.
 - [packages/themes/README.md](packages/themes/README.md): five curated presets — `minimal`, `cinematic`, `broadcast`, `terminal`, `vintage`. Subpath imports for tree-shake.
@@ -44,6 +45,7 @@ Bach is designed so that a model can produce a working integration on the first 
 ## Security
 
 - [SECURITY.md](SECURITY.md): threat model. The `applyTheme` parser is the boundary for both runtime theming and the Conducting protocol; arbitrary HTML, CSS, or JS cannot reach the renderer.
+- [RELEASING.md](RELEASING.md): release-blocking gates and the 1.0.0 readiness checklist. CodeQL `security-extended`, the conduct fuzz harness, size-limit, and Playwright across three engines must all be green.
 
 ## Project map for models
 
