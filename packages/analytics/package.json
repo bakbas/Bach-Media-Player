@@ -1,0 +1,49 @@
+{
+  "name": "@bach/analytics",
+  "version": "0.0.0",
+  "description": "QoE analytics for Bach Media Player — IndexedDB-backed event store, opt-in upload, schema-strict event taxonomy.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["./src/define.ts", "./dist/define.js", "./dist/define.cjs"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "import": "./dist/define.js",
+      "require": "./dist/define.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@bach/core": "workspace:*"
+  },
+  "size-limit": [
+    {
+      "name": "@bach/analytics (ESM, gzipped)",
+      "path": "dist/index.js",
+      "limit": "4 KB"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
