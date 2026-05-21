@@ -32,6 +32,10 @@ export default defineConfig({
             { label: 'Conducting — live director mode', slug: 'conducting' },
           ],
         },
+        {
+          label: 'Operating',
+          items: [{ label: 'Releasing & hardening', slug: 'releasing' }],
+        },
       ],
       customCss: ['./src/styles/global.css'],
     }),

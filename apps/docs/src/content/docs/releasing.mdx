@@ -1,0 +1,69 @@
+---
+title: Releasing & hardening
+description: Release-blocking gates, the 1.0.0 readiness checklist, and the conduct fuzz harness.
+---
+
+Bach ships package-by-package via [changesets]. The release pipeline is
+gated by a single `release-gate` GitHub Actions workflow that bundles
+every assertion needed before a new version reaches npm.
+
+[changesets]: https://github.com/changesets/changesets
+
+## Release-blocking gates
+
+The gate runs on every push to `main` and on PRs labelled
+`release-ready`. A release cannot ship until every step is green.
+
+| Gate | What it asserts |
+|---|---|
+| `pnpm lint` | Biome lint and format checks pass. |
+| `pnpm typecheck` | Every package's `tsc --noEmit` passes against the strict root tsconfig. |
+| `pnpm build` | Every package builds dual ESM+CJS+`.d.ts`. |
+| `pnpm test` | All unit suites pass — including the conduct fuzz harness. |
+| `pnpm --filter @bach/conduct test -- fuzz` | The harness runs again in isolation; an aggregate cannot hide a regression. |
+| `pnpm size` | Every package stays within its size-limit budget. |
+| CodeQL `security-extended` | No new security findings from GitHub's hosted analysis. |
+| Playwright E2E | Chromium / Firefox / WebKit smoke flows — including theming and headless mode. |
+
+## The conduct fuzz harness
+
+`packages/conduct/src/fuzz.ts` generates 340+ malicious theme
+manifests across every category that has ever escaped a CSS context —
+HTML, `url()`, `@import`, `expression()`, `javascript:`, `data:`,
+Unicode confusables, oversized payloads, deeply nested objects, type
+confusion, prototype pollution, replay frames.
+
+The harness feeds each payload through the real `@bach/core`
+`applyTheme()` parser and asserts every one of them lands in
+`result.rejected` with `result.applied === {}`. The release-gate
+workflow runs it twice — once as part of the regular package test
+sweep and once in isolation — so a noisy aggregate cannot hide a
+regression.
+
+Add a new payload whenever a new CSS-context escape technique appears
+in the wild. The harness is intentionally hand-curated, not random —
+every entry has a label so a regression points at the exact category
+that broke.
+
+## 1.0.0 readiness checklist
+
+The full checklist lives in [`RELEASING.md`](https://github.com/bakbas/Bach-Media-Player/blob/main/RELEASING.md)
+at the repo root. The headline items:
+
+- Token contract frozen — every `--bach-*` variable in
+  [`THEMING.md`](/theming/) matches `packages/core/src/theming.ts`.
+- Part name and slot contracts frozen.
+- `@bach/core` < 100 KB gzip with every default-on feature enabled.
+- Coverage ≥ 85 % per shipped package.
+- Conduct fuzz suite zero leakage.
+- axe-core a11y audit clean on the playground for every preset and
+  for headless mode.
+- CodeQL clean.
+- BrowserStack iOS nightly green for seven consecutive runs.
+- Docs full content; `llms.txt` regenerated from the live token
+  contract.
+
+After 1.0.0 the token, part, slot, and protocol versions are frozen
+under semver. Renames are major bumps; additions are minor; loosening
+a regex is minor; tightening one is major unless the previously
+accepted values were a security regression.

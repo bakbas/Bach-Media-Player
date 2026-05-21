@@ -1,0 +1,51 @@
+name: Release gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, labeled]
+
+concurrency:
+  group: release-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  gate:
+    # Always runs on main; on PRs only when the `release-ready` label is set so
+    # contributors do not pay the full battery on every push. Maintainers add
+    # the label once a PR is ready for merge into a stable line.
+    if: >
+      github.event_name == 'push' ||
+      contains(github.event.pull_request.labels.*.name, 'release-ready')
+    name: Lint + tests + size + conduct fuzz
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Build all packages
+        run: pnpm build
+      - name: Unit tests (every package)
+        run: pnpm test
+      - name: Conduct fuzz harness — release-blocking
+        # Pinned, isolated run so a fuzz regression cannot be hidden by a
+        # noisy aggregate. Asserts zero XSS / CSS-breakout leakage against
+        # the real @bach/core applyTheme parser.
+        run: pnpm --filter @bach/conduct test -- fuzz
+      - name: Bundle size budget
+        run: pnpm size
