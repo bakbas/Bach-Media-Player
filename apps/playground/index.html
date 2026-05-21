@@ -112,12 +112,30 @@
       </section>
 
       <section class="panel">
-        <h2>Theme</h2>
+        <h2>Skin gallery</h2>
+        <p class="muted">
+          Every card below is a real <code>@bach/themes</code> preset — the same
+          objects published on npm. Click <strong>Apply</strong> to push the
+          manifest through <code>applyTheme()</code> and watch the player above
+          re-skin in place. <strong>Auto-cycle</strong> walks every skin so you
+          can compare them at a glance.
+        </p>
+        <div class="actions">
+          <button id="skin-cycle" data-testid="skin-cycle">Auto-cycle skins</button>
+          <button id="skin-stop" data-testid="skin-stop" hidden>Stop cycling</button>
+        </div>
+        <div class="skin-grid" id="skin-grid" data-testid="skin-grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Theme manifest</h2>
         <p class="muted">Click a preset or paste a JSON manifest. Manifests are validated before they touch the DOM.</p>
         <div class="theme-row">
-          <button class="theme" data-theme="default" data-testid="theme-default">Default</button>
-          <button class="theme" data-theme="cinematic" data-testid="theme-cinematic">Cinematic</button>
           <button class="theme" data-theme="minimal" data-testid="theme-minimal">Minimal</button>
+          <button class="theme" data-theme="cinematic" data-testid="theme-cinematic">Cinematic</button>
+          <button class="theme" data-theme="broadcast" data-testid="theme-broadcast">Broadcast</button>
+          <button class="theme" data-theme="terminal" data-testid="theme-terminal">Terminal</button>
+          <button class="theme" data-theme="vintage" data-testid="theme-vintage">Vintage</button>
           <button class="theme" data-theme="neon" data-testid="theme-neon">Neon</button>
         </div>
         <textarea id="theme-input" data-testid="theme-input" spellcheck="false" rows="8"></textarea>

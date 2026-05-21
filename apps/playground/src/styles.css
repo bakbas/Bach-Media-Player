@@ -111,3 +111,59 @@ pre {
   gap: 10px;
   align-items: center;
 }
+
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.skin-card {
+  background: #0b0d10;
+  border: 1px solid #2c3138;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s ease;
+}
+.skin-card[aria-current="true"] {
+  border-color: #6dabff;
+  box-shadow: 0 0 0 2px rgba(109, 171, 255, 0.18);
+}
+.skin-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.skin-card__head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.skin-card__head code {
+  font-size: 0.75rem;
+  color: #6dabff;
+  background: transparent;
+}
+.skin-card__swatches {
+  display: flex;
+  gap: 6px;
+}
+.skin-card__swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #2c3138;
+  display: block;
+}
+.skin-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #aaa;
+  flex: 1;
+}
+.skin-card button {
+  align-self: flex-start;
+}

@@ -15,7 +15,7 @@ import { type Effect, PRESETS as GPU_PRESETS, buildPipelineSpec } from '@bach/gp
 import '@bach/gpu-fx/define';
 import '@bach/ui/define';
 import Hls from 'hls.js';
-import { PRESETS } from './themes.js';
+import { PRESETS, type PresetName, SKIN_SUMMARIES } from './themes.js';
 
 const player = document.getElementById('player') as BachPlayerElement;
 const video = player.querySelector('video') as HTMLVideoElement;
@@ -93,19 +93,88 @@ function renderResult(label: string, result: ReturnType<typeof applyTheme>): voi
   themeOutput.textContent = `${summary}\n${JSON.stringify(result, null, 2)}`;
 }
 
+function highlightActiveSkin(active: PresetName | null): void {
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('button.theme')) {
+    btn.setAttribute('aria-pressed', String(btn.dataset.theme === active));
+  }
+  for (const card of document.querySelectorAll<HTMLElement>('[data-skin-card]')) {
+    card.setAttribute('aria-current', String(card.dataset.skinCard === active));
+  }
+}
+
+function applyPreset(name: PresetName): void {
+  const manifest = PRESETS[name];
+  themeInput.value = JSON.stringify(manifest, null, 2);
+  const result = player.applyTheme(manifest);
+  renderResult(name, result);
+  highlightActiveSkin(name);
+}
+
 for (const button of document.querySelectorAll<HTMLButtonElement>('button.theme')) {
   button.addEventListener('click', () => {
-    const name = button.dataset.theme as keyof typeof PRESETS;
-    const manifest = PRESETS[name];
-    if (!manifest) return;
-    themeInput.value = JSON.stringify(manifest, null, 2);
-    const result = player.applyTheme(manifest);
-    renderResult(name, result);
-    for (const btn of document.querySelectorAll<HTMLButtonElement>('button.theme')) {
-      btn.setAttribute('aria-pressed', String(btn === button));
-    }
+    const name = button.dataset.theme as PresetName | undefined;
+    if (!name || !(name in PRESETS)) return;
+    applyPreset(name);
   });
 }
+
+// ----- Skin gallery -------------------------------------------------------
+
+const skinGrid = document.getElementById('skin-grid') as HTMLDivElement;
+for (const skin of SKIN_SUMMARIES) {
+  const card = document.createElement('article');
+  card.className = 'skin-card';
+  card.dataset.skinCard = skin.name;
+  card.setAttribute('aria-current', 'false');
+  card.innerHTML = `
+    <header class="skin-card__head">
+      <h3>${skin.label}</h3>
+      <code>@bach/themes/${skin.name}</code>
+    </header>
+    <div class="skin-card__swatches">
+      ${skin.swatches.map((c) => `<span class="skin-card__swatch" style="background:${c}"></span>`).join('')}
+    </div>
+    <p>${skin.description}</p>
+    <button type="button" data-apply-skin="${skin.name}">Apply</button>
+  `;
+  skinGrid.append(card);
+}
+
+skinGrid.addEventListener('click', (event) => {
+  const target = event.target as HTMLElement;
+  const name = target.dataset.applySkin as PresetName | undefined;
+  if (!name || !(name in PRESETS)) return;
+  applyPreset(name);
+});
+
+const skinCycleBtn = document.getElementById('skin-cycle') as HTMLButtonElement;
+const skinStopBtn = document.getElementById('skin-stop') as HTMLButtonElement;
+let cycleTimer: ReturnType<typeof setInterval> | null = null;
+let cycleIndex = 0;
+
+function stopCycle(): void {
+  if (cycleTimer) {
+    clearInterval(cycleTimer);
+    cycleTimer = null;
+  }
+  skinCycleBtn.hidden = false;
+  skinStopBtn.hidden = true;
+}
+
+skinCycleBtn.addEventListener('click', () => {
+  stopCycle();
+  skinCycleBtn.hidden = true;
+  skinStopBtn.hidden = false;
+  applyPreset(SKIN_SUMMARIES[cycleIndex % SKIN_SUMMARIES.length]?.name ?? 'minimal');
+  cycleIndex += 1;
+  cycleTimer = setInterval(() => {
+    const next = SKIN_SUMMARIES[cycleIndex % SKIN_SUMMARIES.length];
+    if (next) applyPreset(next.name);
+    cycleIndex += 1;
+  }, 2000);
+});
+
+skinStopBtn.addEventListener('click', () => stopCycle());
 
 document.getElementById('apply-theme')?.addEventListener('click', () => {
   let manifest: unknown;
@@ -120,15 +189,14 @@ document.getElementById('apply-theme')?.addEventListener('click', () => {
 });
 
 document.getElementById('reset-theme')?.addEventListener('click', () => {
+  stopCycle();
   for (const key of Array.from(player.style)) {
     if (key.startsWith('--bach-')) player.style.removeProperty(key);
   }
   player.removeAttribute('data-layout');
   themeInput.value = '';
   themeOutput.textContent = '[reset] all --bach-* properties cleared';
-  for (const btn of document.querySelectorAll<HTMLButtonElement>('button.theme')) {
-    btn.setAttribute('aria-pressed', 'false');
-  }
+  highlightActiveSkin(null);
 });
 
 // ----- Headless toggle ----------------------------------------------------
