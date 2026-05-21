@@ -212,6 +212,62 @@ for (const button of document.querySelectorAll<HTMLButtonElement>('button.fx')) 
 
 renderFxState('idle', []);
 
+// ----- AI theme assist demo -----------------------------------------------
+
+const aiPrompt = document.getElementById('ai-prompt') as HTMLInputElement;
+const aiOutput = document.getElementById('ai-output') as HTMLPreElement;
+
+const BACH_VARIABLE_DOCS = [
+  '--bach-color-bg (color)',
+  '--bach-color-fg (color)',
+  '--bach-color-accent (color)',
+  '--bach-color-muted (color)',
+  '--bach-radius (length)',
+  '--bach-control-size (length)',
+  '--bach-control-gap (length)',
+  '--bach-progress-track (color)',
+  '--bach-progress-fill (color)',
+  '--bach-progress-buffer (color)',
+  '--bach-font-family (font-family)',
+  '--bach-font-size (length)',
+  '--bach-overlay-bg (color)',
+  '--bach-overlay-blur (length)',
+];
+
+const SYSTEM_PROMPT = `You generate Bach Media Player theme manifests.
+Return only a JSON object that matches this schema:
+{
+  "version": 1,
+  "cssVariables"?: { /* keys from the documented set below; string values */ },
+  "layout"?: "default" | "compact" | "cinematic"
+}
+
+Documented CSS variables (key + value type):
+${BACH_VARIABLE_DOCS.map((line) => `  - ${line}`).join('\n')}
+
+Allowed value formats:
+  - color: #rgb, #rrggbb, rgb(...)/rgba(...), oklch(...), color-mix(...), currentcolor, transparent
+  - length: <number>(px|rem|em|%|vh|vw)
+  - font-family: word/space/comma/quote/dash chars only
+
+Reject anything containing url(), expression(), data:, javascript:, @import, @charset, or angle brackets — the runtime parser will drop the entire pair.
+Return JSON only, no prose.`;
+
+document.getElementById('ai-generate')?.addEventListener('click', () => {
+  const value = aiPrompt.value.trim();
+  if (!value) {
+    aiOutput.textContent = '[ai-assist] empty prompt';
+    return;
+  }
+  const payload = {
+    model: 'claude-sonnet-4-6',
+    max_tokens: 800,
+    system: SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: `Vibe: ${value}` }],
+  };
+  aiOutput.textContent = `// POST https://api.anthropic.com/v1/messages\n${JSON.stringify(payload, null, 2)}`;
+});
+
 // ----- Live state read-out ------------------------------------------------
 
 const stateOutput = document.getElementById('state-output') as HTMLPreElement;
