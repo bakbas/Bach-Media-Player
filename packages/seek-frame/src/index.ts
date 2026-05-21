@@ -56,4 +56,15 @@ export {
   denseThumbnailPlan,
 } from './scrub-engine.js';
 
+export {
+  type DetectScenesOptions,
+  type Histogram,
+  type HistogramOptions,
+  type SceneBoundary,
+  type Thumbnail,
+  computeHistogram,
+  detectScenes,
+  histogramDistance,
+} from './scene-detect.js';
+
 export { BachSeekFrameElement } from './element.js';
