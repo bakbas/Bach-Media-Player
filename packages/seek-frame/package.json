@@ -1,6 +1,6 @@
 {
   "name": "@bach/seek-frame",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player frame-accurate seek — WebCodecs VideoDecoder + MP4Box.js keyframe index + LRU frame cache.",
   "license": "MIT",
   "type": "module",
@@ -36,7 +36,9 @@
     "mp4box": "^0.5.2"
   },
   "peerDependenciesMeta": {
-    "mp4box": { "optional": true }
+    "mp4box": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@bach/core": "workspace:*"

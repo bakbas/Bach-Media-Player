@@ -1,6 +1,6 @@
 {
   "name": "@bach/a11y",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player accessibility layer: keyboard shortcuts, focus trap, prefers-reduced-motion guard.",
   "license": "MIT",
   "type": "module",

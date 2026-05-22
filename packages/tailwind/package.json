@@ -1,6 +1,6 @@
 {
   "name": "@bach/tailwind",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Tailwind preset plugin exposing the Bach Media Player CSS variable contract as Tailwind theme tokens.",
   "license": "MIT",
   "type": "module",
@@ -30,7 +30,9 @@
     "tailwindcss": "^3.4.0 || ^4.0.0"
   },
   "peerDependenciesMeta": {
-    "tailwindcss": { "optional": true }
+    "tailwindcss": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@bach/core": "workspace:*"

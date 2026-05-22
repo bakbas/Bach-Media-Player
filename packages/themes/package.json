@@ -1,6 +1,6 @@
 {
   "name": "@bach/themes",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player — curated theme presets (Minimal, Cinematic, Broadcast, Terminal, Vintage) and helpers for the Phase 5 Theme Universe.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@bach/ui",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player UI controls: play, progress, volume, time, fullscreen. Slot-based, ::part()-styled, ARIA-correct.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@bach/captions-ai",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player AI captions engine — in-browser Whisper via Transformers.js, no audio leaves the device.",
   "license": "MIT",
   "type": "module",

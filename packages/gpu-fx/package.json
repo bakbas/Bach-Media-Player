@@ -1,6 +1,6 @@
 {
   "name": "@bach/gpu-fx",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player Akustik — WebGPU shader pipeline for color grade, blur, watermark, 3D LUT, film grain.",
   "license": "MIT",
   "type": "module",

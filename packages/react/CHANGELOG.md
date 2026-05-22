@@ -1,11 +1,13 @@
----
-'@bach/react': minor
----
+# @bach/react
 
-Sprint 36-37 — `@bach/react` wrapper.
+## 1.0.0
 
-New package shipping a React 18+/19 binding around the `<bach-player>`
-Custom Element. Three deliberate design choices:
+### Minor Changes
+
+- b38a25d: Sprint 36-37 — `@bach/react` wrapper.
+
+  New package shipping a React 18+/19 binding around the `<bach-player>`
+  Custom Element. Three deliberate design choices:
 
   - SSR-safe for the Next.js App Router. `@bach/core/define` is loaded
     via `import('@bach/core/define')` inside a `useEffect`, so it
@@ -21,11 +23,19 @@ Custom Element. Three deliberate design choices:
     slice changes. `useBachPlayerSnapshot(ref)` returns the full
     snapshot for callers that want everything.
 
-JSX module augmentation extends `react`'s JSX namespace so
-`<bach-player>` is fully typed alongside the React component.
+  JSX module augmentation extends `react`'s JSX namespace so
+  `<bach-player>` is fully typed alongside the React component.
 
-Numbers:
+  Numbers:
+
   - 7 unit tests (render, defaults, headless, ref forwarding,
     slotted content, hook initial null, hook snapshot after mount).
   - 410+ unit tests across the monorepo.
   - @bach/react size: 752 B brotli / 3 KB budget (react external).
+
+### Patch Changes
+
+- Updated dependencies [6c39365]
+- Updated dependencies [b942a5d]
+- Updated dependencies [4c04e55]
+  - @bach/core@0.1.0

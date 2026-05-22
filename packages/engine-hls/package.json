@@ -1,6 +1,6 @@
 {
   "name": "@bach/engine-hls",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player HLS engine adapter (hls.js).",
   "license": "MIT",
   "type": "module",
