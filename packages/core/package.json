@@ -1,6 +1,6 @@
 {
   "name": "@bach/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Bach Media Player core: <bach-player> element, signals state, codec negotiator, EME orchestrator.",
   "license": "MIT",
   "type": "module",

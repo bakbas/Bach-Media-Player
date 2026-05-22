@@ -1,6 +1,6 @@
 {
   "name": "@bach/analytics",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "QoE analytics for Bach Media Player — IndexedDB-backed event store, opt-in upload, schema-strict event taxonomy.",
   "license": "MIT",
   "type": "module",

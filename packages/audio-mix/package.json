@@ -1,6 +1,6 @@
 {
   "name": "@bach/audio-mix",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player Polifoni — Web Audio multi-track mixing, equal-power crossfade, spectral analyzer.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@bach/engine-native",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player native engine adapter: Safari/iOS native HLS, progressive MP4/WebM, anything HTMLMediaElement.canPlayType() accepts.",
   "license": "MIT",
   "type": "module",

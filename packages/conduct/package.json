@@ -1,6 +1,6 @@
 {
   "name": "@bach/conduct",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Bach Media Player Conducting — live director mode. Broadcaster signs theme manifests; viewers verify and sandbox-apply within 100 ms.",
   "license": "MIT",
   "type": "module",
