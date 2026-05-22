@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { getFocusable, trapFocus } from './focus-trap.js';
 
 function setup(html: string): HTMLDivElement {
@@ -74,5 +74,30 @@ describe('trapFocus', () => {
     expect(document.activeElement).toBe(document.getElementById('x'));
     untrap();
     expect(document.activeElement).toBe(before);
+  });
+
+  it('Tab inside an empty container preventDefaults and refocuses the container', () => {
+    const w = setup('<span>nothing tabbable here</span>');
+    const untrap = trapFocus(w);
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    const preventDefault = vi.spyOn(event, 'preventDefault');
+    w.dispatchEvent(event);
+    expect(preventDefault).toHaveBeenCalled();
+    expect(document.activeElement).toBe(w);
+    untrap();
+  });
+
+  it('descends into open shadow roots when collecting focusable descendants', () => {
+    // Host is itself tab-eligible (button) so it lands in the direct list;
+    // getFocusable then walks into its shadow root and picks up the inner
+    // focusable. This is the path Bach UI controls follow.
+    const w = setup('<button id="host">host</button>');
+    const host = w.querySelector('#host') as HTMLElement;
+    const shadow = host.attachShadow({ mode: 'open' });
+    const inner = document.createElement('button');
+    inner.id = 'inside-shadow';
+    shadow.appendChild(inner);
+    const ids = getFocusable(w).map((el) => el.id);
+    expect(ids).toContain('inside-shadow');
   });
 });

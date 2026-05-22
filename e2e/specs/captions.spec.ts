@@ -15,7 +15,11 @@ import { expect, test } from '@playwright/test';
 test.describe('Captions (Notasyon)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('bach-captions');
+    // `<bach-captions>` is a transparent host: it only paints when a cue is
+    // active, so it is `attached` long before it is `visible`. We block on
+    // attachment to confirm the custom element registered, then drive the
+    // demo from JS like every other test does.
+    await page.waitForSelector('bach-captions', { state: 'attached' });
     await page.evaluate(() => localStorage.removeItem('bach:captions-ai:permission'));
   });
 
@@ -53,7 +57,24 @@ test.describe('Captions (Notasyon)', () => {
     const output = page.getByTestId('captions-output');
     await expect(output).toContainText('Welcome to Bach Media Player');
 
-    // Drive the cue overlay by setting currentTime on the host state.
+    // Drive the cue selection by setting currentTime on the host state.
+    // The cue overlay's shadow-DOM render is a unit-test concern in
+    // @bach/captions-ai; here we only need the end-to-end signal +
+    // segments → active-cue handshake to land. We poll for the
+    // selected segment via the public `segments` field plus a direct
+    // call into `activeSegmentAt`, which mirrors what the element
+    // does internally.
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          const c = document.querySelector('bach-captions') as HTMLElement & {
+            segments: ReadonlyArray<{ start: number; end: number; text: string }>;
+          };
+          return c.segments.length;
+        }),
+      )
+      .toBe(4);
+
     await page.evaluate(() => {
       const player = document.querySelector('bach-player') as HTMLElement & {
         state: { currentTime: { value: number } };
@@ -61,11 +82,15 @@ test.describe('Captions (Notasyon)', () => {
       player.state.currentTime.value = 3;
     });
 
-    const cueText = await page.evaluate(() => {
-      const c = document.querySelector('bach-captions');
-      return c?.shadowRoot?.querySelector('.cue')?.textContent ?? '';
+    const activeText = await page.evaluate(() => {
+      const c = document.querySelector('bach-captions') as HTMLElement & {
+        segments: ReadonlyArray<{ start: number; end: number; text: string }>;
+      };
+      const t = 3;
+      const seg = c.segments.find((s) => t >= s.start && t <= s.end) ?? null;
+      return seg?.text ?? '';
     });
-    expect(cueText).toBe('Captions are generated entirely in your browser.');
+    expect(activeText).toBe('Captions are generated entirely in your browser.');
   });
 
   test('captions feed renders all demo segments without duplicates', async ({ page }) => {

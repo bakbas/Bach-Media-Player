@@ -24,7 +24,7 @@ function makeFakeSubtle(): SubtleLike {
       const view = new Uint8Array(
         data instanceof ArrayBuffer ? data : (data as ArrayBufferView).buffer,
       );
-      return checksum(view).buffer;
+      return checksum(view).buffer as ArrayBuffer;
     },
     async verify(_alg, _key, signature, data) {
       const sigBytes = new Uint8Array(

@@ -62,7 +62,7 @@ export class BachConductElement extends HTMLElement {
     }
     let verifyKey: CryptoKey;
     try {
-      verifyKey = await importVerifyKey(keyBytes);
+      verifyKey = await importVerifyKey(keyBytes as BufferSource);
     } catch {
       this.dispatchEvent(
         new CustomEvent('bach:conduct-rejected', {
