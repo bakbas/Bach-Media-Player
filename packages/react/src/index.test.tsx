@@ -2,7 +2,7 @@ import { BachPlayerElement } from '@bach/core';
 import { act, cleanup, render } from '@testing-library/react';
 import { type RefObject, createRef } from 'react';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { BachPlayer, useBachPlayerState } from './index.js';
+import { BachPlayer, useBachPlayerSnapshot, useBachPlayerState } from './index.js';
 
 beforeAll(() => {
   if (!customElements.get('bach-player')) {
@@ -84,5 +84,43 @@ describe('useBachPlayerState', () => {
       await Promise.resolve();
     });
     expect(getByTestId('paused').textContent).toBe('true');
+  });
+});
+
+describe('useBachPlayerSnapshot', () => {
+  function FullProbe({
+    playerRef,
+  }: { playerRef: RefObject<BachPlayerElement | null> }): JSX.Element {
+    const snap = useBachPlayerSnapshot(playerRef);
+    return <span data-testid="muted">{snap === null ? 'null' : String(snap.muted)}</span>;
+  }
+
+  it('returns null until the ref attaches, then yields the full snapshot', async () => {
+    const ref = createRef<BachPlayerElement>();
+    const { getByTestId } = render(
+      <>
+        <BachPlayer ref={ref} skipDefine>
+          <video slot="media">
+            <track kind="captions" />
+          </video>
+        </BachPlayer>
+        <FullProbe playerRef={ref} />
+      </>,
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+    // muted default in the element is false; the demo just verifies the
+    // snapshot is non-null and the field is reachable.
+    expect(['true', 'false']).toContain(getByTestId('muted').textContent);
+  });
+});
+
+describe('<BachPlayer /> lazy define', () => {
+  it('skips the dynamic import when the element is already registered', () => {
+    // skipDefine=false but element already registered in beforeAll, so
+    // the early-return on line 78 fires — no throw, just renders.
+    const { container } = render(<BachPlayer src="lazy.m3u8" />);
+    expect(container.querySelector('bach-player')?.getAttribute('src')).toBe('lazy.m3u8');
   });
 });

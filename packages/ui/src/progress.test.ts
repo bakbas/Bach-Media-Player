@@ -82,4 +82,34 @@ describe('<bach-progress>', () => {
     bar.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
     expect(video.currentTime).toBe(0);
   });
+
+  it('pointerdown + pointermove on the bar drive video.currentTime', () => {
+    const { player, video } = makePlayer();
+    const bar = document.createElement('bach-progress') as HTMLElement & {
+      setPointerCapture: (id: number) => void;
+      releasePointerCapture: (id: number) => void;
+      hasPointerCapture: (id: number) => boolean;
+    };
+    player.appendChild(bar);
+    player.state.duration.value = 200;
+    let captured = false;
+    bar.setPointerCapture = () => {
+      captured = true;
+    };
+    bar.releasePointerCapture = () => {
+      captured = false;
+    };
+    bar.hasPointerCapture = () => captured;
+    bar.getBoundingClientRect = () =>
+      ({ left: 0, width: 100, top: 0, height: 10, right: 100, bottom: 10, x: 0, y: 0 }) as DOMRect;
+    bar.dispatchEvent(
+      new PointerEvent('pointerdown', { clientX: 25, pointerId: 1, bubbles: true }),
+    );
+    expect(video.currentTime).toBeCloseTo(50);
+    bar.dispatchEvent(
+      new PointerEvent('pointermove', { clientX: 75, pointerId: 1, bubbles: true }),
+    );
+    expect(video.currentTime).toBeCloseTo(150);
+    bar.dispatchEvent(new PointerEvent('pointerup', { clientX: 75, pointerId: 1, bubbles: true }));
+  });
 });

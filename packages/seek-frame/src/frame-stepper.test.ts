@@ -144,4 +144,32 @@ describe('createCurrentTimeFallback', () => {
     expect(await stepper.at(99)).toBeNull();
     expect(video.addEventListener).not.toHaveBeenCalled();
   });
+
+  it('prev() and next() drive the fallback through step()', async () => {
+    const index = createKeyframeIndex(samples);
+    const listeners: Record<string, Array<(event: Event) => void>> = {};
+    const video = {
+      currentTime: 0,
+      addEventListener: (type: string, handler: (event: Event) => void) => {
+        let set = listeners[type];
+        if (!set) {
+          set = [];
+          listeners[type] = set;
+        }
+        set.push(handler);
+      },
+      removeEventListener: (type: string, handler: (event: Event) => void) => {
+        listeners[type] = (listeners[type] ?? []).filter((h) => h !== handler);
+      },
+    };
+    const stepper = createCurrentTimeFallback({ index, video });
+    const firstStep = stepper.next();
+    for (const h of listeners.seeked ?? []) h(new Event('seeked'));
+    await firstStep;
+    expect(stepper.position).toBe(1);
+    const back = stepper.prev();
+    for (const h of listeners.seeked ?? []) h(new Event('seeked'));
+    await back;
+    expect(stepper.position).toBe(0);
+  });
 });

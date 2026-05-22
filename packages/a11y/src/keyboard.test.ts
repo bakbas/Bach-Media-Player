@@ -36,6 +36,14 @@ describe('keyToAction', () => {
   it('returns null for unknown keys', () => {
     expect(keyToAction({ key: 'q' })).toBeNull();
   });
+
+  it('uppercase shortcut letters fall through the same branches', () => {
+    expect(keyToAction({ key: 'K' })).toEqual({ type: 'playpause' });
+    expect(keyToAction({ key: 'M' })).toEqual({ type: 'mute' });
+    expect(keyToAction({ key: 'F' })).toEqual({ type: 'fullscreen' });
+    expect(keyToAction({ key: 'J' })).toEqual({ type: 'seek-rel', delta: -10 });
+    expect(keyToAction({ key: 'L' })).toEqual({ type: 'seek-rel', delta: 10 });
+  });
 });
 
 function makePlayerWithVideo(): { player: BachPlayerElement; video: HTMLVideoElement } {
@@ -95,6 +103,45 @@ describe('applyAction', () => {
     Object.defineProperty(video, 'paused', { value: false, configurable: true });
     applyAction(player, { type: 'playpause' });
     expect(video.pause).toHaveBeenCalled();
+  });
+
+  it('fullscreen: requests via standard API when no fullscreen element is set', () => {
+    const { player } = makePlayerWithVideo();
+    Object.defineProperty(document, 'fullscreenElement', { value: null, configurable: true });
+    const request = vi.fn(async () => {});
+    (player as unknown as { requestFullscreen: () => Promise<void> }).requestFullscreen = request;
+    applyAction(player, { type: 'fullscreen' });
+    expect(request).toHaveBeenCalled();
+  });
+
+  it('fullscreen: exits via document.exitFullscreen when one is already set', () => {
+    const { player } = makePlayerWithVideo();
+    Object.defineProperty(document, 'fullscreenElement', { value: player, configurable: true });
+    const exit = vi.fn(async () => {});
+    (document as unknown as { exitFullscreen: () => Promise<void> }).exitFullscreen = exit;
+    applyAction(player, { type: 'fullscreen' });
+    expect(exit).toHaveBeenCalled();
+  });
+
+  it('fullscreen: falls back to webkitRequestFullscreen when the promise rejects', async () => {
+    const { player } = makePlayerWithVideo();
+    Object.defineProperty(document, 'fullscreenElement', { value: null, configurable: true });
+    const webkit = vi.fn();
+    const failing = vi.fn(() => Promise.reject(new Error('blocked')));
+    Object.assign(player, { requestFullscreen: failing, webkitRequestFullscreen: webkit });
+    applyAction(player, { type: 'fullscreen' });
+    // Wait one microtask tick so the promise.catch fallback runs.
+    await Promise.resolve();
+    expect(webkit).toHaveBeenCalled();
+  });
+
+  it('fullscreen: uses webkitRequestFullscreen directly when no promise is returned', () => {
+    const { player } = makePlayerWithVideo();
+    Object.defineProperty(document, 'fullscreenElement', { value: null, configurable: true });
+    const webkit = vi.fn();
+    Object.assign(player, { requestFullscreen: undefined, webkitRequestFullscreen: webkit });
+    applyAction(player, { type: 'fullscreen' });
+    expect(webkit).toHaveBeenCalled();
   });
 });
 

@@ -64,6 +64,49 @@ describe('<bach-volume>', () => {
     expect(video.muted).toBe(false);
   });
 
+  it('pointerdown + pointermove on the slider drive video.volume', () => {
+    const { player, video } = makePlayer();
+    const vol = document.createElement('bach-volume');
+    player.appendChild(vol);
+    const slider = vol.shadowRoot?.querySelector('.slider') as HTMLElement & {
+      setPointerCapture: (id: number) => void;
+      releasePointerCapture: (id: number) => void;
+      hasPointerCapture: (id: number) => boolean;
+    };
+    // happy-dom doesn't ship pointer-capture; stub them as harmless no-ops.
+    let captured = false;
+    slider.setPointerCapture = () => {
+      captured = true;
+    };
+    slider.releasePointerCapture = () => {
+      captured = false;
+    };
+    slider.hasPointerCapture = () => captured;
+    slider.getBoundingClientRect = () =>
+      ({ left: 0, width: 100, top: 0, height: 10, right: 100, bottom: 10, x: 0, y: 0 }) as DOMRect;
+    slider.dispatchEvent(
+      new PointerEvent('pointerdown', { clientX: 50, pointerId: 1, bubbles: true }),
+    );
+    expect(video.volume).toBeCloseTo(0.5);
+    slider.dispatchEvent(
+      new PointerEvent('pointermove', { clientX: 75, pointerId: 1, bubbles: true }),
+    );
+    expect(video.volume).toBeCloseTo(0.75);
+    slider.dispatchEvent(
+      new PointerEvent('pointerup', { clientX: 75, pointerId: 1, bubbles: true }),
+    );
+  });
+
+  it('keyboard ArrowDown decreases video.volume', () => {
+    const { player, video } = makePlayer();
+    const vol = document.createElement('bach-volume');
+    player.appendChild(vol);
+    const slider = vol.shadowRoot?.querySelector('.slider') as HTMLElement;
+    video.volume = 0.5;
+    slider.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    expect(video.volume).toBeCloseTo(0.45, 5);
+  });
+
   it('slider keyboard steps adjust video.volume', () => {
     const { player, video } = makePlayer();
     const vol = document.createElement('bach-volume');

@@ -130,6 +130,34 @@ describe('createDecoderController', () => {
     controller.configure({ codec: 'avc1.42E01E' });
     await expect(controller.decode(chunk(0), 0)).rejects.toThrow('bad chunk');
   });
+
+  it('exposes state and queueSize from the underlying decoder', () => {
+    const controller = createDecoderController((opts) => new FakeDecoder(opts));
+    expect(controller.state).toBe('unconfigured');
+    controller.configure({ codec: 'avc1.42E01E' });
+    expect(controller.state).toBe('configured');
+    expect(controller.queueSize).toBe(0);
+  });
+
+  it('close() resets pending decodes and closes the underlying decoder', () => {
+    let closed = false;
+    const controller = createDecoderController((opts) => {
+      const d = new FakeDecoder(opts);
+      d.close = () => {
+        closed = true;
+      };
+      return d;
+    });
+    controller.configure({ codec: 'avc1.42E01E' });
+    controller.close();
+    expect(closed).toBe(true);
+  });
+
+  it('flush() awaits the underlying decoder flush', async () => {
+    const controller = createDecoderController((opts) => new FakeDecoder(opts));
+    controller.configure({ codec: 'avc1.42E01E' });
+    await expect(controller.flush()).resolves.toBeUndefined();
+  });
 });
 
 describe('isWebCodecsSupported', () => {

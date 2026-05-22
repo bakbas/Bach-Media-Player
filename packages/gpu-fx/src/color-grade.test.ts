@@ -106,4 +106,22 @@ describe('applyColorGrade — CPU reference', () => {
     expect(out[1]).toBe(0);
     expect(out[2]).toBe(1);
   });
+
+  it('substitutes the default for non-finite lift channels', () => {
+    const u = colorGradeUniforms({
+      type: 'color-grade',
+      lift: [Number.NaN, Number.POSITIVE_INFINITY, 0] as [number, number, number],
+    });
+    expect(u.lift[0]).toBe(0);
+    expect(u.lift[1]).toBe(0);
+    expect(u.lift[2]).toBe(0);
+  });
+
+  it('treats NaN per-pixel inputs as 0 in the clamp', () => {
+    const u = colorGradeUniforms({ type: 'color-grade' });
+    const out = new Float32Array(4);
+    applyColorGrade(new Float32Array([Number.NaN, 0.5, 0.5, 1]), u, out);
+    expect(out[0]).toBe(0);
+    expect(out[3]).toBe(1);
+  });
 });
